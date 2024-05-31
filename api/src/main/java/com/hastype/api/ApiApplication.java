@@ -1,13 +1,13 @@
-package com.hastype.hastype;
+package com.hastype.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class HastypeApplication {
+public class ApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(HastypeApplication.class, args);
+		SpringApplication.run(ApiApplication.class, args);
 	}
 
 }
