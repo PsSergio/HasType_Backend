@@ -1,33 +1,32 @@
 package com.hastype.api.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import java.util.UUID;
+
 
 @Entity
 @Table(name="User")
-
-public class User {
+public class UserModel {
 
     @Id
-    @Column(name = "id")
-    private int id;
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private UUID id;
 
-    @Column(name = "email")
+//    @Column(name = "email")
     private String email;
 
-    @Column(name = "nome")
+//    @Column(name = "nome")
     private String nome;
 
-    @Column(name = "senha")
+//    @Column(name = "senha")
     private String senha;
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
