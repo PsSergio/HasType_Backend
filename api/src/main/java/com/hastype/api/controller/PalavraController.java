@@ -35,4 +35,12 @@ public class PalavraController {
         return ResponseEntity.status(HttpStatus.OK).body(palavraRepository.findAll());
     }
 
+    @GetMapping("sorteiaPalavras/{qtdPalavras}")
+    public ResponseEntity<List<PalavraModel>> sorteaiaPalavras(@PathVariable(name="qtdPalavras") int qtdPalavras){
+
+        var listaId = new PalavraModel().sorteiaNumeros((int)palavraRepository.count(), qtdPalavras);
+
+        return ResponseEntity.status(HttpStatus.OK).body(palavraRepository.findAllById(listaId));
+    }
+
 }

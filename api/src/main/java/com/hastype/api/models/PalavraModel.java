@@ -5,6 +5,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 @Entity
 @Table(name = "Palavra")
 public class PalavraModel {
@@ -42,6 +46,22 @@ public class PalavraModel {
 
     public boolean validaResposta(String respostaUser){
         return this.palavraTraduzida == respostaUser;
+    }
+
+    public List<Integer> sorteiaNumeros(int limite, int qtdPalavras){
+        Random random = new Random();
+
+        List<Integer> lista = new ArrayList<>();
+        for (int i = 0; i < qtdPalavras; i++){
+            Integer num = random.nextInt(limite);
+
+            if(!lista.contains(num)){
+                lista.add(num);
+            }else{
+                i--;
+            }
+        }
+        return lista;
     }
 
 }
