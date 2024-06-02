@@ -2,20 +2,20 @@ package com.hastype.api.controller;
 
 import com.hastype.api.dtos.FinishQuizRecordDto;
 import com.hastype.api.dtos.StartQuizRecordDto;
+import com.hastype.api.models.PalavraModel;
 import com.hastype.api.models.QuizModel;
-import com.hastype.api.repository.QuizRepository;
+import com.hastype.api.models.QuizPalavrasModel;
+import com.hastype.api.services.QuizPalavrasService;
 import com.hastype.api.services.QuizService;
 import jakarta.validation.Valid;
-import org.apache.catalina.connector.Response;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -23,22 +23,29 @@ import java.util.UUID;
 public class QuizController {
 
     private final QuizService quizService;
+    private final QuizPalavrasService quizPalavrasService;
+
+
 
     @Autowired
-    public QuizController(QuizService quizService) {
+    public QuizController(QuizService quizService, QuizPalavrasService quizPalavrasService) {
         this.quizService = quizService;
+        this.quizPalavrasService = quizPalavrasService;
     }
 
-    @PostMapping("start")
-    public ResponseEntity<QuizModel> iniciarQuiz(@RequestBody @Valid StartQuizRecordDto startQuizRecordDto){
 
-//        var quiz = new QuizModel();
-//        BeanUtils.copyProperties(quizRecordDto, quiz);
-//        quiz.setTempoInicio(LocalTime.now());
+    @PostMapping("start")
+    public ResponseEntity<List<Object>> iniciarQuiz(@RequestBody @Valid StartQuizRecordDto startQuizRecordDto){
 
         QuizModel quiz = quizService.startQuiz(startQuizRecordDto);
+        List<QuizPalavrasModel> quizPalavrasModel = quizPalavrasService.atribuirPalavraAoQuiz(startQuizRecordDto.qtdPalavras(), quiz.getId());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(quiz);
+//        List<PalavraModel> palavraModels = new ArrayList<>(quizPalavrasModel.size());
+//        for(int i = 0; i < quizPalavrasModel.size(); i++){
+//            palavraModels.add(new )
+//        }
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(Arrays.asList(quiz, quizPalavrasModel));
 
     }
 

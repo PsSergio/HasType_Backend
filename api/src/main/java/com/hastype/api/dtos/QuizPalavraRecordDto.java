@@ -6,5 +6,5 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
-public record QuizPalavraRecordDto(@NotNull Integer idPalavra, @NotNull UUID idQuiz) {
+public record QuizPalavraRecordDto(@NotNull UUID idQuiz) {
 }

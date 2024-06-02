@@ -1,6 +1,8 @@
 package com.hastype.api.models;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalTime;
 import java.util.UUID;
@@ -17,8 +19,12 @@ public class QuizModel {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
+    @Column(columnDefinition = "VARCHAR(36)")
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID id;
 
+    @Column(columnDefinition = "VARCHAR(36)")
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID userId;
 
     public Integer getPontuacao() {
