@@ -4,6 +4,7 @@ import com.hastype.api.dtos.FinishQuizRecordDto;
 import com.hastype.api.dtos.StartQuizRecordDto;
 import com.hastype.api.models.QuizModel;
 import com.hastype.api.repository.QuizRepository;
+import com.hastype.api.services.QuizService;
 import jakarta.validation.Valid;
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.BeanUtils;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,17 +22,23 @@ import java.util.UUID;
 @RequestMapping("quiz/")
 public class QuizController {
 
+    private final QuizService quizService;
+
     @Autowired
-    private QuizRepository quizRepository;
+    public QuizController(QuizService quizService) {
+        this.quizService = quizService;
+    }
 
     @PostMapping("start")
-    public ResponseEntity<QuizModel> iniciarQuiz(@RequestBody @Valid StartQuizRecordDto quizRecordDto){
+    public ResponseEntity<QuizModel> iniciarQuiz(@RequestBody @Valid StartQuizRecordDto startQuizRecordDto){
 
-        var quiz = new QuizModel();
-        BeanUtils.copyProperties(quizRecordDto, quiz);
-        quiz.setTempoInicio(LocalTime.now());
+//        var quiz = new QuizModel();
+//        BeanUtils.copyProperties(quizRecordDto, quiz);
+//        quiz.setTempoInicio(LocalTime.now());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(quizRepository.save(quiz));
+        QuizModel quiz = quizService.startQuiz(startQuizRecordDto);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(quiz);
 
     }
 
@@ -38,16 +46,14 @@ public class QuizController {
     public ResponseEntity<Object> finalizarQuiz(@PathVariable(value="id") UUID id,
                                                 @RequestBody @Valid FinishQuizRecordDto finishQuizRecordDto){
 
-        Optional<QuizModel> quizFinalizado = quizRepository.findById(id);
+        return new ResponseEntity<Object>(quizService.finishQuiz(id, finishQuizRecordDto), HttpStatus.OK);
 
-        if(quizFinalizado.isPresent()){
-            var quiz = quizFinalizado.get();
-            BeanUtils.copyProperties(finishQuizRecordDto, quiz);
-            quiz.setTempoFinal(LocalTime.now());
-            return ResponseEntity.status(HttpStatus.OK).body(quizRepository.save(quiz));
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found");
 
+    }
+
+    @GetMapping("all")
+    public List<QuizModel> listarRegistros(){
+        return quizService.listarTodos();
     }
 
 

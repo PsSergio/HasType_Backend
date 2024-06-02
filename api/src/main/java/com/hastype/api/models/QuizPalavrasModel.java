@@ -1,19 +1,26 @@
 package com.hastype.api.models;
 
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
 import java.util.UUID;
 
+@Entity
+@Table(name = "QuizPalavra")
 public class QuizPalavrasModel {
 
-    private Integer idPalavra;
+    @EmbeddedId
+    private QuizPalavraID quizPalavraID;
 
     private Boolean isCorrect;
 
-    public Integer getIdPalavra() {
-        return idPalavra;
+    public QuizPalavraID getQuizPalavraID() {
+        return quizPalavraID;
     }
 
-    public void setIdPalavra(Integer idPalavra) {
-        this.idPalavra = idPalavra;
+    public void setQuizPalavraID(QuizPalavraID quizPalavraID) {
+        this.quizPalavraID = quizPalavraID;
     }
 
     public Boolean getCorrect() {
