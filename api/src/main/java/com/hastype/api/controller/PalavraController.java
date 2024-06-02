@@ -3,6 +3,7 @@ package com.hastype.api.controller;
 import com.hastype.api.dtos.PalavraRecordDto;
 import com.hastype.api.models.PalavraModel;
 import com.hastype.api.repository.PalavraRepository;
+import com.hastype.api.services.PalavraService;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,29 +19,24 @@ import java.util.List;
 @RequestMapping("palavra/")
 public class PalavraController {
 
+
+    private final PalavraService palavraService;
+
     @Autowired
-    private PalavraRepository palavraRepository;
+    public PalavraController(PalavraService palavraService) {
+        this.palavraService = palavraService;
+    }
 
     @PostMapping("add")
     public ResponseEntity<PalavraModel> adicionaPalavra(@RequestBody @Valid PalavraRecordDto palavraRecordDto){
 
-        var palavraModel = new PalavraModel();
-        BeanUtils.copyProperties(palavraRecordDto, palavraModel);
-        return ResponseEntity.status(HttpStatus.CREATED).body(palavraRepository.save(palavraModel));
+        return ResponseEntity.status(HttpStatus.CREATED).body(palavraService.adicionaPalavra(palavraRecordDto));
 
     }
 
     @GetMapping("all")
     public ResponseEntity<List<PalavraModel>> listaPalavras(){
-        return ResponseEntity.status(HttpStatus.OK).body(palavraRepository.findAll());
-    }
-
-    @GetMapping("sorteiaPalavras/{qtdPalavras}")
-    public ResponseEntity<List<PalavraModel>> sorteaiaPalavras(@PathVariable(name="qtdPalavras") int qtdPalavras){
-
-        var listaId = new PalavraModel().sorteiaNumeros((int)palavraRepository.count(), qtdPalavras);
-
-        return ResponseEntity.status(HttpStatus.OK).body(palavraRepository.findAllById(listaId));
+        return ResponseEntity.status(HttpStatus.OK).body(palavraService.listarPalavras());
     }
 
 }
