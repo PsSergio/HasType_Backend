@@ -54,4 +54,8 @@ public class UserModel {
         this.senha = senha;
     }
 
+    public boolean validaLogin(String _nome, String _senha){
+        return this.nome == _nome && this.senha == _senha;
+    }
+
 }

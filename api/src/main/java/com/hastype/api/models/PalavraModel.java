@@ -39,4 +39,9 @@ public class PalavraModel {
     public void setPalavraTraduzida(String palavraTraduzida) {
         this.palavraTraduzida = palavraTraduzida;
     }
+
+    public boolean validaResposta(String respostaUser){
+        return this.palavraTraduzida == respostaUser;
+    }
+
 }
