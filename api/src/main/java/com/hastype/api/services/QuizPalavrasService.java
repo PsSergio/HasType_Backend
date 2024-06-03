@@ -37,7 +37,7 @@ public class QuizPalavrasService {
 
     }
 
-    public List<QuizPalavrasModel> atribuirPalavraAoQuiz(int qtdPalavras, UUID idQuiz){
+    public List<PalavraModel> atribuirPalavraAoQuiz(int qtdPalavras, UUID idQuiz){
 
         List<Integer> idsSorteados = sorteiaIds(qtdPalavras);
         System.out.println("ids: " + idsSorteados);
@@ -46,12 +46,15 @@ public class QuizPalavrasService {
 
         for (int i = 0; i < qtdPalavras; i++){
             listQuizPalavras.add(new QuizPalavrasModel());
-            System.out.println(listQuizPalavras.get(i).getPalavraId());
+
             listQuizPalavras.get(i).setPalavraId(idsSorteados.get(i));
+
             listQuizPalavras.get(i).setQuizId(idQuiz);
         }
 
-        return quizPalavraRepository.saveAll(listQuizPalavras);
+        quizPalavraRepository.saveAll(listQuizPalavras);
+
+        return palavraRepository.findAllById(idsSorteados);
 
     }
 

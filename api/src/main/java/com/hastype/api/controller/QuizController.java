@@ -38,14 +38,14 @@ public class QuizController {
     public ResponseEntity<List<Object>> iniciarQuiz(@RequestBody @Valid StartQuizRecordDto startQuizRecordDto){
 
         QuizModel quiz = quizService.startQuiz(startQuizRecordDto);
-        List<QuizPalavrasModel> quizPalavrasModel = quizPalavrasService.atribuirPalavraAoQuiz(startQuizRecordDto.qtdPalavras(), quiz.getId());
+        List<PalavraModel> palavrasModel = quizPalavrasService.atribuirPalavraAoQuiz(startQuizRecordDto.qtdPalavras(), quiz.getId());
 
 //        List<PalavraModel> palavraModels = new ArrayList<>(quizPalavrasModel.size());
 //        for(int i = 0; i < quizPalavrasModel.size(); i++){
 //            palavraModels.add(new )
 //        }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(Arrays.asList(quiz, quizPalavrasModel));
+        return ResponseEntity.status(HttpStatus.CREATED).body(Arrays.asList(quiz, palavrasModel));
 
     }
 
