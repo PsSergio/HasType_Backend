@@ -40,11 +40,6 @@ public class QuizController {
         QuizModel quiz = quizService.startQuiz(startQuizRecordDto);
         List<PalavraModel> palavrasModel = quizPalavrasService.atribuirPalavraAoQuiz(startQuizRecordDto.qtdPalavras(), quiz.getId());
 
-//        List<PalavraModel> palavraModels = new ArrayList<>(quizPalavrasModel.size());
-//        for(int i = 0; i < quizPalavrasModel.size(); i++){
-//            palavraModels.add(new )
-//        }
-
         return ResponseEntity.status(HttpStatus.CREATED).body(Arrays.asList(quiz, palavrasModel));
 
     }

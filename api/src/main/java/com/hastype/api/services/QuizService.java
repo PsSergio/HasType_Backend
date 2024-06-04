@@ -1,9 +1,9 @@
 package com.hastype.api.services;
 
-import com.google.protobuf.Any;
 import com.hastype.api.dtos.FinishQuizRecordDto;
 import com.hastype.api.dtos.StartQuizRecordDto;
 import com.hastype.api.models.QuizModel;
+import com.hastype.api.repository.PalavraRepository;
 import com.hastype.api.repository.QuizRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -19,9 +19,14 @@ import java.util.UUID;
 public class QuizService {
 
     private final QuizRepository quizRepository;
+    private final PalavraRepository palavraRepository;
 
-    public QuizService(QuizRepository quizRepository) {
+    private final QuizPalavrasService quizPalavrasService;
+
+    public QuizService(QuizRepository quizRepository, PalavraRepository palavraRepository, QuizPalavrasService quizPalavrasService) {
         this.quizRepository = quizRepository;
+        this.palavraRepository = palavraRepository;
+        this.quizPalavrasService = quizPalavrasService;
     }
 
     public QuizModel startQuiz(StartQuizRecordDto quizRecordDto){
@@ -29,6 +34,7 @@ public class QuizService {
         var quiz = new QuizModel();
         BeanUtils.copyProperties(quizRecordDto, quiz);
         quiz.setTempoInicio(LocalTime.now());
+        quiz.setPontuacao(0);
 
         return quizRepository.save(quiz);
 
@@ -39,9 +45,23 @@ public class QuizService {
         Optional<QuizModel> quizFinalizado = quizRepository.findById(id);
 
         if(quizFinalizado.isPresent()){
+
             var quiz = quizFinalizado.get();
+
             BeanUtils.copyProperties(finishQuizRecordDto, quiz);
+
             quiz.setTempoFinal(LocalTime.now());
+
+            Integer _pontuacao = 0;
+            for(int i = 0; i < finishQuizRecordDto.respostas().size(); i++){
+
+                if(quizPalavrasService.isRespostaCorrect(finishQuizRecordDto.respostas().get(i))){
+                    _pontuacao++;
+                }
+            }
+
+            quiz.setPontuacao(_pontuacao);
+
             return new ResponseEntity<>(quizRepository.save(quiz), HttpStatus.OK);
 
         }

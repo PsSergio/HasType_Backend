@@ -1,6 +1,7 @@
 package com.hastype.api.services;
 
 import com.hastype.api.dtos.QuizPalavraRecordDto;
+import com.hastype.api.dtos.RespostaQuizRecordDto;
 import com.hastype.api.models.PalavraModel;
 import com.hastype.api.models.QuizPalavrasModel;
 import com.hastype.api.repository.PalavraRepository;
@@ -9,10 +10,7 @@ import com.hastype.api.repository.QuizRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class QuizPalavrasService {
@@ -55,6 +53,21 @@ public class QuizPalavrasService {
         quizPalavraRepository.saveAll(listQuizPalavras);
 
         return palavraRepository.findAllById(idsSorteados);
+
+    }
+
+    public Boolean isRespostaCorrect (RespostaQuizRecordDto resposta){
+
+        Optional<PalavraModel> palavraModel = palavraRepository.findById(resposta.palavraId());
+
+        if(palavraModel.isPresent()){
+            String respostaCorreta = palavraModel.get().getPalavraTraduzida();
+            
+            return Objects.equals(resposta.resposta(), respostaCorreta);
+        }
+
+        return false;
+
 
     }
 
