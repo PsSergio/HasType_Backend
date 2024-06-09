@@ -2,6 +2,7 @@ package com.hastype.api.services;
 
 import com.hastype.api.models.QuizModel;
 import com.hastype.api.models.RankingTempoModel;
+import com.hastype.api.models.UserModel;
 import com.hastype.api.repository.QuizRepository;
 import com.hastype.api.repository.RankingTempoRepository;
 import org.springframework.beans.BeanUtils;
@@ -38,14 +39,9 @@ public class RankingTempoService {
     }
 
     public boolean findUserInRanking(UUID userID){
-        List<RankingTempoModel> listRanking = rankingTempoRepository.findAll();
+        Optional<RankingTempoModel> user = rankingTempoRepository.findByUserId(userID);
 
-        for(RankingTempoModel ranking : listRanking){
-            if(ranking.getUserId() == userID){
-                return true;
-            }
-        }
-        return false;
+        return user.isPresent();
     }
 
     public Integer calculaTempoTotal(Optional<QuizModel> quiz){

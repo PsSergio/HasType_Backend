@@ -12,4 +12,6 @@ public interface RankingTempoRepository extends JpaRepository<RankingTempoModel,
 
     public List<RankingTempoModel> findAllByOrderByTempoAsc();
 
+    public Optional<RankingTempoModel> findByUserId(UUID userId);
+
 }
