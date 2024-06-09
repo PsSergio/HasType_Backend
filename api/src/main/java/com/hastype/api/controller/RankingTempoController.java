@@ -24,16 +24,16 @@ public class RankingTempoController {
         this.rankingTempoService = rankingTempoService;
     }
 
-    @PostMapping("addUser/{id}")
-    public ResponseEntity<List<Object>> addUser(@PathVariable("id") UUID quizId){
-        boolean serviceStatus = rankingTempoService.addUserRanking(quizId);
-
-        if(serviceStatus){
-            return ResponseEntity.status(HttpStatus.CREATED).body(Arrays.asList(rankingTempoService.atualizaRanking()));
-        }else{
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Arrays.asList("Error"));
-        }
-    }
+//    @PostMapping("addUser/{id}")
+//    public ResponseEntity<List<Object>> addUser(@PathVariable("id") UUID quizId){
+//        boolean needsToAddUser = rankingTempoService.addUserRanking(quizId);
+//
+//        if(needsToAddUser){
+//            return ResponseEntity.status(HttpStatus.CREATED).body(Arrays.asList(rankingTempoService.atualizaRanking()));
+//        }else{
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Arrays.asList("Error"));
+//        }
+//    }
 
     @GetMapping("user/{id}")
     public ResponseEntity<Boolean> findUser(@PathVariable("id") UUID userId){

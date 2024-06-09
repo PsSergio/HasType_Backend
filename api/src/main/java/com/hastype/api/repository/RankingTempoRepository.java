@@ -10,8 +10,8 @@ import java.util.UUID;
 
 public interface RankingTempoRepository extends JpaRepository<RankingTempoModel, Integer> {
 
-    public List<RankingTempoModel> findAllByOrderByTempoAsc();
+    List<RankingTempoModel> findAllByOrderByTempoAsc();
 
-    public Optional<RankingTempoModel> findByUserId(UUID userId);
+    Optional<RankingTempoModel> findByUserId(UUID userId);
 
 }

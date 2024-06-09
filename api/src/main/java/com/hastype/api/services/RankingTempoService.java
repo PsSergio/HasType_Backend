@@ -39,42 +39,44 @@ public class RankingTempoService {
     }
 
     public boolean findUserInRanking(UUID userID){
-        Optional<RankingTempoModel> user = rankingTempoRepository.findByUserId(userID);
+        Optional<RankingTempoModel> userInRanking = rankingTempoRepository.findByUserId(userID);
 
-        return user.isPresent();
+        return userInRanking.isEmpty();
     }
 
-    public Integer calculaTempoTotal(Optional<QuizModel> quiz){
-        long tempo_final = SECONDS.between(quiz.get().getTempoInicio(), quiz.get().getTempoFinal());
+    public Integer calculaTempoTotal(QuizModel quiz){
+        long tempo_final = SECONDS.between(quiz.getTempoInicio(), quiz.getTempoFinal());
 
         return (int) tempo_final;
     }
 
 
 
-    public boolean addUserRanking(UUID quizId){
+    public void addUserRanking(QuizModel quiz){
 
         var ranking = new RankingTempoModel();
-        ranking.setQuizId(quizId);
 
-        Optional<QuizModel> quiz = quizRepository.findById(ranking.getQuizId());
+        ranking.setQuizId(quiz.getId());
+        ranking.setTempo(calculaTempoTotal(quiz));
+        ranking.setUserId(quiz.getUserId());
 
-        if(quiz.isPresent()) {
-            boolean userFound = findUserInRanking(quiz.get().getUserId());
+        rankingTempoRepository.save(ranking);
 
-            if(userFound){
-                return false;
-//                return ResponseEntity.status(HttpStatus.FOUND).body("User can't be added");
-            }else{
-                ranking.setTempo(calculaTempoTotal(quiz));
-                ranking.setUserId(quiz.get().getUserId());
-                rankingTempoRepository.save(ranking);
-                return true;
-            }
 
-        }
-        return false;
-//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Id Quiz not found");
+    }
+
+    public void updateUserInRanking(QuizModel quiz){
+
+        var findRanking = rankingTempoRepository.findByUserId(quiz.getUserId());
+        var newRanking = new RankingTempoModel();
+
+        BeanUtils.copyProperties(findRanking, newRanking);
+
+        newRanking.setQuizId(quiz.getId());
+//        newRanking.setUserId(quiz.getUserId());
+        newRanking.setTempo(calculaTempoTotal(quiz));
+
+        rankingTempoRepository.save(newRanking);
 
     }
 

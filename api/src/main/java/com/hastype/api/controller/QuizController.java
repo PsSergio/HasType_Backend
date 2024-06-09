@@ -49,7 +49,9 @@ public class QuizController {
     public ResponseEntity<Object> finalizarQuiz(@PathVariable(value="id") UUID id,
                                                 @RequestBody @Valid FinishQuizRecordDto finishQuizRecordDto){
 
-        boolean serviceStatus = rankingTempoService.addUserRanking(id);
+//        boolean serviceStatus = rankingTempoService.addUserRanking(id);
+//
+//        rankingTempoService.atualizaRanking();
 
         return new ResponseEntity<Object>(quizService.finishQuiz(id, finishQuizRecordDto), HttpStatus.OK);
 

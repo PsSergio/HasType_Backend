@@ -23,10 +23,13 @@ public class QuizService {
 
     private final QuizPalavrasService quizPalavrasService;
 
-    public QuizService(QuizRepository quizRepository, PalavraRepository palavraRepository, QuizPalavrasService quizPalavrasService) {
+    private final RankingTempoService rankingTempoService;
+
+    public QuizService(QuizRepository quizRepository, PalavraRepository palavraRepository, QuizPalavrasService quizPalavrasService, RankingTempoService rankingTempoService) {
         this.quizRepository = quizRepository;
         this.palavraRepository = palavraRepository;
         this.quizPalavrasService = quizPalavrasService;
+        this.rankingTempoService = rankingTempoService;
     }
 
     public QuizModel startQuiz(StartQuizRecordDto quizRecordDto){
@@ -61,6 +64,17 @@ public class QuizService {
             }
 
             quiz.setPontuacao(_pontuacao);
+
+            boolean needsToAddUserInRanking = rankingTempoService.findUserInRanking(quiz.getUserId());
+
+            if (needsToAddUserInRanking){
+                rankingTempoService.addUserRanking(quiz);
+            }else{
+                // needs to only update
+
+                rankingTempoService.updateUserInRanking((quiz));
+            }
+
 
             return new ResponseEntity<>(quizRepository.save(quiz), HttpStatus.OK);
 
