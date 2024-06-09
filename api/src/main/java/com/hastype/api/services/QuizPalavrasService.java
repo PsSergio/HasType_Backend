@@ -62,7 +62,7 @@ public class QuizPalavrasService {
 
         if(palavraModel.isPresent()){
             String respostaCorreta = palavraModel.get().getPalavraTraduzida();
-            
+
             return Objects.equals(resposta.resposta(), respostaCorreta);
         }
 

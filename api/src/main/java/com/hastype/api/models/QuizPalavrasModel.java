@@ -19,8 +19,6 @@ public class QuizPalavrasModel {
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID quizId;
 
-    private Boolean isCorrect;
-
     public Integer getPalavraId() {
         return palavraId;
     }
@@ -35,13 +33,5 @@ public class QuizPalavrasModel {
 
     public void setQuizId(UUID quizId) {
         this.quizId = quizId;
-    }
-
-    public Boolean getCorrect() {
-        return isCorrect;
-    }
-
-    public void setCorrect(Boolean correct) {
-        isCorrect = correct;
     }
 }
