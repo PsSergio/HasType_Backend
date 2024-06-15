@@ -36,3 +36,33 @@ create table ranking_tempo(
 	FOREIGN KEY (quiz_id) REFERENCES quiz(id),
 	FOREIGN KEY (user_id) REFERENCES user(id)
 )
+
+INSERT INTO palavra (id, palavra_normal, palavra_traduzida) VALUES
+(0, 'Software', 'Programa'),
+(1, 'Hardware', 'Equipamento'),
+(2, 'Bug', 'Erro'),
+(3, 'Database', 'Banco de dados'),
+(4, 'Algorithm', 'Algoritmo'),
+(5, 'Interface', 'Interface'),
+(6, 'Library', 'Biblioteca'),
+(7, 'Function', 'Função'),
+(8, 'Variable', 'Variável'),
+(9, 'Loop', 'Laço'),
+(10, 'Array', 'Vetor'),
+(11, 'Class', 'Classe'),
+(12, 'Object', 'Objeto'),
+(13, 'Exception', 'Exceção'),
+(14, 'Debug', 'Depurar'),
+(15, 'Syntax', 'Sintaxe'),
+(16, 'Script', 'Roteiro'),
+(17, 'Query', 'Consulta'),
+(18, 'Branch', 'Ramificação'),
+(19, 'Repository', 'Repositório'),
+(20, 'Encryption', 'Criptografia'),
+(21, 'Backup', 'Cópia de Segurança'),
+(22, 'Cloud', 'Nuvem'),
+(23, 'Service', 'Serviço'),
+(24, 'Framework', 'Estrutura'),
+(25, 'Compiler', 'Compilador')
+
+select * from palavra 
