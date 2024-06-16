@@ -4,6 +4,7 @@ import com.hastype.api.dtos.LoginRecordDto;
 import com.hastype.api.dtos.UserRecordDto;
 import com.hastype.api.models.UserModel;
 import com.hastype.api.repository.UserRepository;
+import com.hastype.api.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,32 +18,33 @@ import java.util.Optional;
 @RestController
 @RequestMapping("user/")
 public class UserController {
+
+    private final UserService userService;
+
     @Autowired
-    private UserRepository userRepository;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("add")
     public ResponseEntity<UserModel> cadastraUsuario(@RequestBody @Valid UserRecordDto userRecordDto){
 
-        var user = new UserModel();
-        BeanUtils.copyProperties(userRecordDto, user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(userRepository.save(user));
+        return userService.addUser(userRecordDto);
+
     }
 
     @PostMapping("validaLogin")
     public Boolean validaLogin (@RequestBody @Valid LoginRecordDto loginRecordDto){
 
-        var user = new UserModel();
-        BeanUtils.copyProperties(user, loginRecordDto);
-
-        Optional<UserModel> userVal = userRepository.findByEmailAndSenha(loginRecordDto.email(), loginRecordDto.senha());
-
-        return userVal.isPresent();
+        return userService.validaLogin(loginRecordDto);
 
     }
 
     @GetMapping("all")
     public ResponseEntity<List<UserModel>> listarUsuarios(){
-        return ResponseEntity.status(HttpStatus.OK).body(userRepository.findAll());
+
+        return userService.findAllUsers();
+
     }
 
 }

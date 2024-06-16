@@ -35,11 +35,6 @@ public class RankingTempoController {
 //        }
 //    }
 
-    @GetMapping("user/{id}")
-    public ResponseEntity<Boolean> findUser(@PathVariable("id") UUID userId){
-        return ResponseEntity.status(HttpStatus.OK).body(rankingTempoService.findUserInRanking(userId));
-    }
-
     @GetMapping("all")
     public ResponseEntity<List<RankingTempoModel>> allRanking(){
         return ResponseEntity.status(HttpStatus.OK).body(rankingTempoService.atualizaRanking());

@@ -38,10 +38,10 @@ public class RankingTempoService {
 
     }
 
-    public boolean findUserInRanking(UUID userID){
+    public Optional<RankingTempoModel> findUserInRanking(UUID userID){
         Optional<RankingTempoModel> userInRanking = rankingTempoRepository.findByUserId(userID);
 
-        return userInRanking.isEmpty();
+        return userInRanking;
     }
 
     public Integer calculaTempoTotal(QuizModel quiz){
@@ -67,16 +67,25 @@ public class RankingTempoService {
 
     public void updateUserInRanking(QuizModel quiz){
 
-        var findRanking = rankingTempoRepository.findByUserId(quiz.getUserId());
+        var oldRanking = rankingTempoRepository.findByUserId(quiz.getUserId());
         var newRanking = new RankingTempoModel();
 
-        BeanUtils.copyProperties(findRanking, newRanking);
+        BeanUtils.copyProperties(oldRanking, newRanking);
 
-        newRanking.setQuizId(quiz.getId());
-//        newRanking.setUserId(quiz.getUserId());
-        newRanking.setTempo(calculaTempoTotal(quiz));
+        Integer newTempo = calculaTempoTotal(quiz);
 
-        rankingTempoRepository.save(newRanking);
+        System.out.println(oldRanking.get().getTempo());
+        System.out.println(newTempo);
+
+        if (oldRanking.get().getTempo() > newTempo) {
+
+            newRanking.setQuizId(quiz.getId());
+            newRanking.setTempo(calculaTempoTotal(quiz));
+
+            rankingTempoRepository.save(newRanking);
+
+
+        }
 
     }
 

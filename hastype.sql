@@ -32,10 +32,13 @@ create table quiz_palavra(
 create table ranking_tempo(
 	id varchar(36) PRIMARY KEY NOT NULL,
 	quiz_id varchar(36) NOT NULL,
-	user_id varchar(36) NOT NULL,
+	user_id varchar(36),
+	tempo integer(5) NOT NULL,
 	FOREIGN KEY (quiz_id) REFERENCES quiz(id),
 	FOREIGN KEY (user_id) REFERENCES user(id)
 )
+
+select * from ranking_tempo
 
 INSERT INTO palavra (id, palavra_normal, palavra_traduzida) VALUES
 (0, 'Software', 'Programa'),
@@ -65,4 +68,5 @@ INSERT INTO palavra (id, palavra_normal, palavra_traduzida) VALUES
 (24, 'Framework', 'Estrutura'),
 (25, 'Compiler', 'Compilador')
 
-select * from palavra 
+select * from quiz
+

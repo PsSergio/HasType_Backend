@@ -65,14 +65,14 @@ public class QuizService {
 
             quiz.setPontuacao(_pontuacao);
 
-            boolean needsToAddUserInRanking = rankingTempoService.findUserInRanking(quiz.getUserId());
+            boolean needsToAddUserInRanking = rankingTempoService.findUserInRanking(quiz.getUserId()).isEmpty();
 
             if (needsToAddUserInRanking){
                 rankingTempoService.addUserRanking(quiz);
             }else{
                 // needs to only update
 
-                rankingTempoService.updateUserInRanking((quiz));
+                rankingTempoService.updateUserInRanking(quiz);
             }
 
 
