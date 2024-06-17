@@ -68,22 +68,15 @@ public class RankingTempoService {
     public void updateUserInRanking(QuizModel quiz){
 
         var oldRanking = rankingTempoRepository.findByUserId(quiz.getUserId());
-        var newRanking = new RankingTempoModel();
-
-        BeanUtils.copyProperties(oldRanking, newRanking);
 
         Integer newTempo = calculaTempoTotal(quiz);
 
-        System.out.println(oldRanking.get().getTempo());
-        System.out.println(newTempo);
-
         if (oldRanking.get().getTempo() > newTempo) {
 
-            newRanking.setQuizId(quiz.getId());
-            newRanking.setTempo(calculaTempoTotal(quiz));
+            oldRanking.get().setQuizId(quiz.getId());
+            oldRanking.get().setTempo(calculaTempoTotal(quiz));
 
-            rankingTempoRepository.save(newRanking);
-
+            rankingTempoRepository.save(oldRanking.get());
 
         }
 
