@@ -5,6 +5,7 @@ import com.hastype.api.models.RankingTempoModel;
 import com.hastype.api.models.UserModel;
 import com.hastype.api.repository.QuizRepository;
 import com.hastype.api.repository.RankingTempoRepository;
+import com.hastype.api.services.interfaces.RankingService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ import java.util.UUID;
 import static java.time.temporal.ChronoUnit.SECONDS;
 
 @Service
-public class RankingTempoService {
+public class RankingTempoService implements RankingService {
 
     private final RankingTempoRepository rankingTempoRepository;
 
@@ -32,12 +33,14 @@ public class RankingTempoService {
         this.quizRepository = quizRepository;
     }
 
+    @Override
     public List<RankingTempoModel> atualizaRanking(){
 
         return rankingTempoRepository.findAllByOrderByTempoAsc();
 
     }
 
+    @Override
     public Optional<RankingTempoModel> findUserInRanking(UUID userID){
         Optional<RankingTempoModel> userInRanking = rankingTempoRepository.findByUserId(userID);
 
@@ -50,8 +53,7 @@ public class RankingTempoService {
         return (int) tempo_final;
     }
 
-
-
+    @Override
     public void addUserRanking(QuizModel quiz){
 
         var ranking = new RankingTempoModel();
@@ -65,6 +67,7 @@ public class RankingTempoService {
 
     }
 
+    @Override
     public void updateUserInRanking(QuizModel quiz){
 
         var oldRanking = rankingTempoRepository.findByUserId(quiz.getUserId());
@@ -81,35 +84,6 @@ public class RankingTempoService {
         }
 
     }
-
-
-
-
-//    public ResponseEntity<RankingTempoModel> userNoRanking(RankingTempoRecordDto rankingTempoRecordDto){
-//
-//        var ranking = new RankingTempoModel();
-//        BeanUtils.copyProperties(rankingTempoRecordDto, ranking);
-//
-//        Optional<QuizModel> quiz = quizRepository.findById(ranking.getQuizId());
-//
-//        if(quiz.isPresent()){
-//
-//            boolean userFound = findUserInRanking(quiz.get().getUserId());
-//
-//            if(userFound){
-////                 atualiza pelo usuario
-////                return ResponseEntity.status(HttpStatus.OK).body(rankingTempoRepository.save(ranking));
-//
-//
-//            }else{
-//                // add usuario
-//                ranking.setUserId(quiz.get().getUserId());
-//                return ResponseEntity.status(HttpStatus.OK).body(rankingTempoRepository.save(ranking));
-//            }
-//
-//        }
-//
-//    }
 
 }
 

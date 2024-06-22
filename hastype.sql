@@ -9,8 +9,6 @@ create table User(
     senha varchar(10) NOT NULL
 );
 
-alter table user modify id varchar(36) 
-
 create table Quiz(
 	id varchar(36) PRIMARY KEY NOT NULL,
     pontuacao Integer (2) NOT NULL,
