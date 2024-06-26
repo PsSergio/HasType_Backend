@@ -2,16 +2,11 @@ package com.hastype.api.services;
 
 import com.hastype.api.models.QuizModel;
 import com.hastype.api.models.RankingTempoModel;
-import com.hastype.api.models.UserModel;
-import com.hastype.api.repository.QuizRepository;
 import com.hastype.api.repository.RankingTempoRepository;
+import com.hastype.api.repository.UserRepository;
 import com.hastype.api.services.interfaces.RankingService;
-import org.springframework.beans.BeanUtils;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,32 +20,36 @@ public class RankingTempoService implements RankingService {
 
     private final UserService userService;
 
-    private final QuizRepository quizRepository;
+    private final UserRepository userRepository;
 
-    public RankingTempoService(RankingTempoRepository rankingTempoRepository, UserService userService, QuizRepository quizRepository) {
+    public RankingTempoService(RankingTempoRepository rankingTempoRepository, UserService userService, UserRepository userRepository) {
         this.rankingTempoRepository = rankingTempoRepository;
         this.userService = userService;
-        this.quizRepository = quizRepository;
+        this.userRepository = userRepository;
     }
 
-    @Override
     public List<RankingTempoModel> atualizaRanking(){
 
         return rankingTempoRepository.findAllByOrderByTempoAsc();
 
     }
 
-    @Override
     public Optional<RankingTempoModel> findUserInRanking(UUID userID){
-        Optional<RankingTempoModel> userInRanking = rankingTempoRepository.findByUserId(userID);
-
-        return userInRanking;
+        return rankingTempoRepository.findByUserId(userID);
     }
 
     public Integer calculaTempoTotal(QuizModel quiz){
         long tempo_final = SECONDS.between(quiz.getTempoInicio(), quiz.getTempoFinal());
 
         return (int) tempo_final;
+    }
+
+    public void validateUserToAddOrUpdate(QuizModel quizModel){
+        if (findUserInRanking(quizModel.getUserId()).isEmpty()){
+            addUserRanking(quizModel);
+        }else{
+            updateUserInRanking(quizModel);
+        }
     }
 
     @Override
@@ -61,6 +60,7 @@ public class RankingTempoService implements RankingService {
         ranking.setQuizId(quiz.getId());
         ranking.setTempo(calculaTempoTotal(quiz));
         ranking.setUserId(quiz.getUserId());
+        ranking.setUserName(userRepository.findById(quiz.getUserId()).get().getNome());
 
         rankingTempoRepository.save(ranking);
 

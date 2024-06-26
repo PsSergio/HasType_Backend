@@ -25,11 +25,14 @@ public class QuizService {
 
     private final RankingTempoService rankingTempoService;
 
-    public QuizService(QuizRepository quizRepository, PalavraRepository palavraRepository, QuizPalavrasService quizPalavrasService, RankingTempoService rankingTempoService) {
+    private final RankingPontuacaoService rankingPontuacaoService;
+
+    public QuizService(QuizRepository quizRepository, PalavraRepository palavraRepository, QuizPalavrasService quizPalavrasService, RankingTempoService rankingTempoService, RankingPontuacaoService rankingPontuacaoService) {
         this.quizRepository = quizRepository;
         this.palavraRepository = palavraRepository;
         this.quizPalavrasService = quizPalavrasService;
         this.rankingTempoService = rankingTempoService;
+        this.rankingPontuacaoService = rankingPontuacaoService;
     }
 
     public QuizModel startQuiz(StartQuizRecordDto quizRecordDto){
@@ -65,16 +68,8 @@ public class QuizService {
 
             quiz.setPontuacao(_pontuacao);
 
-            boolean needsToAddUserInRanking = rankingTempoService.findUserInRanking(quiz.getUserId()).isEmpty();
-
-            if (needsToAddUserInRanking){
-                rankingTempoService.addUserRanking(quiz);
-            }else{
-                // needs to only update
-
-                rankingTempoService.updateUserInRanking(quiz);
-            }
-
+            rankingTempoService.validateUserToAddOrUpdate(quiz);
+            rankingPontuacaoService.validateUserToAddOrUpdate(quiz);
 
             return new ResponseEntity<>(quizRepository.save(quiz), HttpStatus.OK);
 

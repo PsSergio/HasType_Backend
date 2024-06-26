@@ -9,10 +9,6 @@ import java.util.UUID;
 
 public interface RankingService {
 
-    public List<RankingTempoModel> atualizaRanking();
-
-    public Optional<RankingTempoModel> findUserInRanking(UUID userID);
-
     public void addUserRanking(QuizModel quiz);
 
     public void updateUserInRanking(QuizModel quiz);

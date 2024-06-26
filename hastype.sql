@@ -34,8 +34,19 @@ create table palavra (
 create table ranking_tempo(
 	id varchar(36) NOT NULL PRIMARY KEY,
     user_id varchar(36) NOT NULL,
+    user_name varchar(30) NOT NULL,
     quiz_id varchar(36) NOT NULL,
     tempo Integer(5) NOT NULL,
+    foreign key (user_id) REFERENCES User(id),
+    foreign key (quiz_id) REFERENCES Quiz(id)
+);
+
+create table ranking_pontuacao(
+	id varchar(36) NOT NULL PRIMARY KEY,
+    user_id varchar(36) NOT NULL,
+    user_name varchar(30) NOT NULL,
+    quiz_id varchar(36) NOT NULL,
+    pontuacao integer(2) NOT NULL,
     foreign key (user_id) REFERENCES User(id),
     foreign key (quiz_id) REFERENCES Quiz(id)
 );
@@ -44,12 +55,6 @@ select * from palavra;
 
 select * from quiz;
 
-delete from quiz;
-
-select * from ranking_tempo
+select * from ranking_tempo;
     
-select * from quiz_palavra where quiz_id = "96b5d18f-e7c8-4f8e-a9c8-6e51f9461f3d";
-
-select * from quiz where id = "96b5d18f-e7c8-4f8e-a9c8-6e51f9461f3d";
-
-select timediff("21:13:47", "21:43:28")
+select * from ranking_pontuacao;

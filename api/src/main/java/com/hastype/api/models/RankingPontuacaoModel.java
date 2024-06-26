@@ -1,16 +1,14 @@
 package com.hastype.api.models;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.sql.Time;
 import java.util.UUID;
 
 @Entity
-@Table(name = "ranking_tempo")
-public class RankingTempoModel {
+@Table(name = "ranking_pontuacao")
+public class RankingPontuacaoModel {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -28,14 +26,14 @@ public class RankingTempoModel {
 
     private String userName;
 
-    private Integer tempo;
+    private Integer pontuacao;
 
-    public String getUserName() {
-        return userName;
+    public UUID getId() {
+        return id;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public UUID getQuizId() {
@@ -46,27 +44,27 @@ public class RankingTempoModel {
         this.quizId = quizId;
     }
 
-    public Integer getTempo() {
-        return tempo;
-    }
-
-    public void setTempo(Integer tempo) {
-        this.tempo = tempo;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
     public UUID getUserId() {
         return userId;
     }
 
     public void setUserId(UUID userId) {
         this.userId = userId;
+    }
+
+    public Integer getPontuacao() {
+        return pontuacao;
+    }
+
+    public void setPontuacao(Integer pontuacao) {
+        this.pontuacao = pontuacao;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }
