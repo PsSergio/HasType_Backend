@@ -10,9 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class  UserService {
@@ -23,13 +21,16 @@ public class  UserService {
         this.userRepository = userRepository;
     }
 
-    public boolean validaLogin(LoginRecordDto loginRecordDto){
+    public ResponseEntity<Object> validaLogin(LoginRecordDto loginRecordDto){
         var user = new UserModel();
         BeanUtils.copyProperties(user, loginRecordDto);
 
         Optional<UserModel> userVal = userRepository.findByEmailAndSenha(loginRecordDto.email(), loginRecordDto.senha());
 
-        return userVal.isPresent();
+        if (userVal.isPresent()){
+            return ResponseEntity.status(HttpStatus.FOUND).body(Arrays.asList(true, userVal));
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
     }
 
     public ResponseEntity<UserModel> addUser(UserRecordDto userRecordDto){
