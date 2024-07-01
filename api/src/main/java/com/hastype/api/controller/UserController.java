@@ -34,7 +34,7 @@ public class UserController {
     }
 
     @PostMapping("validaLogin")
-    public ResponseEntity<Object> validaLogin (@RequestBody @Valid LoginRecordDto loginRecordDto){
+    public ResponseEntity<UserModel> validaLogin (@RequestBody @Valid LoginRecordDto loginRecordDto){
 
         return userService.validaLogin(loginRecordDto);
 
