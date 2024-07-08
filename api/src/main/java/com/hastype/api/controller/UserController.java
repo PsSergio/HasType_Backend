@@ -6,6 +6,7 @@ import com.hastype.api.models.UserModel;
 import com.hastype.api.repository.UserRepository;
 import com.hastype.api.services.UserService;
 import jakarta.validation.Valid;
+import org.apache.coyote.Response;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,6 +46,11 @@ public class UserController {
 
         return userService.findAllUsers();
 
+    }
+
+    @GetMapping("byEmail/{email}")
+    public ResponseEntity<UserModel> userByEmail(@PathVariable(value="email") String email){
+        return userService.findByEmail(email);
     }
 
 }
