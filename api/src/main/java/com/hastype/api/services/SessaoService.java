@@ -7,6 +7,7 @@ import com.hastype.api.repository.SessaoRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -16,6 +17,24 @@ public class SessaoService {
 
     public SessaoService(SessaoRepository sessaoRepository) {
         this.sessaoRepository = sessaoRepository;
+    }
+
+    public SessaoModel saveSession(UUID userId){
+
+        var sessaoModel = new SessaoModel();
+
+        sessaoModel.setUserId(userId);
+        sessaoModel.setInitialSession(LocalDateTime.now());
+        sessaoModel.calculateFinalSession(300);
+
+        sessaoRepository.save(sessaoModel);
+
+        return sessaoModel;
+
+    }
+
+    public void deleteSession(UUID sessionId){
+        sessaoRepository.deleteById(sessionId);
     }
 
     public boolean validateSession(UUID sessionId){
@@ -30,6 +49,7 @@ public class SessaoService {
                 return true;
             }
 
+            sessaoRepository.deleteById(sessionId);
             throw new SessionIsExpiredException();
 
         }

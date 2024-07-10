@@ -6,6 +6,7 @@ import com.hastype.api.dtos.UserRecordDto;
 import com.hastype.api.exceptions.EmailAlreadyExistsException;
 import com.hastype.api.exceptions.LoginFailedException;
 import com.hastype.api.exceptions.UserNotFoundException;
+import com.hastype.api.models.SessaoModel;
 import com.hastype.api.models.UserModel;
 import com.hastype.api.repository.UserRepository;
 import org.slf4j.Logger;
@@ -23,22 +24,32 @@ public class  UserService {
     private static Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
+    private final SessaoService sessaoService;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, SessaoService sessaoService) {
         this.userRepository = userRepository;
+        this.sessaoService = sessaoService;
     }
 
-    public ResponseEntity<UserModel> validaLogin(LoginRecordDto loginRecordDto){
+    public ResponseEntity<SessaoModel> validaLogin(LoginRecordDto loginRecordDto){
         var user = new UserModel();
-        BeanUtils.copyProperties(user, loginRecordDto);
+        BeanUtils.copyProperties(loginRecordDto, user);
 
-        UserModel userVal = userRepository.findByEmailAndSenha(loginRecordDto.email(), loginRecordDto.senha()).orElseThrow(LoginFailedException::new);
+        boolean isLoginValid = user.validateUserLogin(loginRecordDto.email(), loginRecordDto.senha());
+        System.out.println(isLoginValid);
+        if(isLoginValid){
+
+            UserModel userValidated = userRepository.findByEmailAndSenha(loginRecordDto.email(), loginRecordDto.senha()).orElseThrow(LoginFailedException::new);
+            return ResponseEntity.status(HttpStatus.FOUND).body(sessaoService.saveSession(userValidated.getId()));
+
+        }
+
+        throw new LoginFailedException();
+
         // TODO: criar método para gerar um token falso
         // 1 - Usar lib do java para gerar um hash
         // 2 - criar uma tabela no banco de dados com o nome de Sessão
         // essa tabela vai ter o id do usuário, o hash e um time em segundos de validade do token
-
-        return ResponseEntity.status(HttpStatus.FOUND).body(userVal);
 
     }
 

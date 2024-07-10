@@ -17,6 +17,8 @@ public class SessaoModel {
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID id;
 
+    @Column(columnDefinition = "VARCHAR(36)")
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID userId;
 
     private LocalDateTime initialSession;
@@ -57,9 +59,17 @@ public class SessaoModel {
         this.sessionExpiration = sessionExpiration;
     }
 
-    public void calculateFinalSession(int timeInMilisseconds){
-        this.sessionExpiration = timeInMilisseconds;
-        this.finalSession = this.finalSession.plusNanos(timeInMilisseconds);
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public void calculateFinalSession(int timeInSeconds){
+        this.sessionExpiration = timeInSeconds;
+        this.finalSession = LocalDateTime.now().plusSeconds(timeInSeconds);
     }
 
     public boolean validateSessionExpiration(){

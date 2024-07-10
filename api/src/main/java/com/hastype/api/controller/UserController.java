@@ -2,6 +2,7 @@ package com.hastype.api.controller;
 
 import com.hastype.api.dtos.LoginRecordDto;
 import com.hastype.api.dtos.UserRecordDto;
+import com.hastype.api.models.SessaoModel;
 import com.hastype.api.models.UserModel;
 import com.hastype.api.repository.UserRepository;
 import com.hastype.api.services.UserService;
@@ -35,7 +36,7 @@ public class UserController {
     }
 
     @PostMapping("validaLogin")
-    public ResponseEntity<UserModel> validaLogin (@RequestBody @Valid LoginRecordDto loginRecordDto){
+    public ResponseEntity<SessaoModel> validaLogin (@RequestBody @Valid LoginRecordDto loginRecordDto){
 
         return userService.validaLogin(loginRecordDto);
 
