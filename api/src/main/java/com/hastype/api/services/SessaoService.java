@@ -33,20 +33,30 @@ public class SessaoService {
 
     }
 
-    public void deleteSession(UUID sessionId){
-        sessaoRepository.deleteById(sessionId);
+    public SessaoModel updateSession(SessaoModel sessaoModel){
+        sessaoModel.setInitialSession(LocalDateTime.now());
+        sessaoModel.calculateFinalSession(300);
+
+        sessaoRepository.save(sessaoModel);
+        return sessaoModel;
     }
 
-    public boolean validateSession(UUID sessionId){
+    public SessaoModel findById(UUID sessionId){
+        return sessaoRepository.findById(sessionId).orElseThrow(SessionDoesntExistException::new);
+    }
+
+    public void validateSession(UUID sessionId){
         var session = sessaoRepository.findById(sessionId);
         if(session.isPresent()){
 
             var sessaoModel = new SessaoModel();
-            BeanUtils.copyProperties(session, sessaoModel);
+            BeanUtils.copyProperties(session.get(), sessaoModel);
+
             boolean sessionIsValid = sessaoModel.validateSessionExpiration();
 
             if(sessionIsValid){
-                return true;
+                updateSession(sessaoModel);
+                return;
             }
 
             sessaoRepository.deleteById(sessionId);

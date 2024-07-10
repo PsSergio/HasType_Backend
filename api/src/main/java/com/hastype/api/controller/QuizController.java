@@ -7,6 +7,7 @@ import com.hastype.api.models.QuizModel;
 import com.hastype.api.services.QuizPalavrasService;
 import com.hastype.api.services.QuizService;
 import com.hastype.api.services.RankingTempoService;
+import com.hastype.api.services.SessaoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,17 +27,24 @@ public class QuizController {
 
     private final RankingTempoService rankingTempoService;
 
+    private final SessaoService sessaoService;
+
 
     @Autowired
-    public QuizController(QuizService quizService, QuizPalavrasService quizPalavrasService, RankingTempoService rankingTempoService) {
+    public QuizController(QuizService quizService, QuizPalavrasService quizPalavrasService, RankingTempoService rankingTempoService, SessaoService sessaoService) {
         this.quizService = quizService;
         this.quizPalavrasService = quizPalavrasService;
         this.rankingTempoService = rankingTempoService;
+        this.sessaoService = sessaoService;
     }
 
 
-    @PostMapping("start")
-    public ResponseEntity<List<Object>> iniciarQuiz(@RequestBody @Valid StartQuizRecordDto startQuizRecordDto){
+    @PostMapping("start/{sessionId}")
+    public ResponseEntity<List<Object>> iniciarQuiz(@PathVariable(value="sessionId") UUID sessionId){
+
+        sessaoService.validateSession(sessionId);
+
+        var startQuizRecordDto = new StartQuizRecordDto(sessaoService.findById(sessionId).getUserId(), 10);
 
         QuizModel quiz = quizService.startQuiz(startQuizRecordDto);
         List<PalavraModel> palavrasModel = quizPalavrasService.atribuirPalavraAoQuiz(startQuizRecordDto.qtdPalavras(), quiz.getId());

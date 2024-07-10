@@ -44,12 +44,10 @@ public class  UserService {
 
         }
 
+//        TODO: needs to fix login validation
+
         throw new LoginFailedException();
 
-        // TODO: criar método para gerar um token falso
-        // 1 - Usar lib do java para gerar um hash
-        // 2 - criar uma tabela no banco de dados com o nome de Sessão
-        // essa tabela vai ter o id do usuário, o hash e um time em segundos de validade do token
 
     }
 

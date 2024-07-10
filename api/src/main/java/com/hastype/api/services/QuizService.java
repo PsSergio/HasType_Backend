@@ -27,12 +27,15 @@ public class QuizService {
 
     private final RankingPontuacaoService rankingPontuacaoService;
 
-    public QuizService(QuizRepository quizRepository, PalavraRepository palavraRepository, QuizPalavrasService quizPalavrasService, RankingTempoService rankingTempoService, RankingPontuacaoService rankingPontuacaoService) {
+    private final SessaoService sessaoService;
+
+    public QuizService(QuizRepository quizRepository, PalavraRepository palavraRepository, QuizPalavrasService quizPalavrasService, RankingTempoService rankingTempoService, RankingPontuacaoService rankingPontuacaoService, SessaoService sessaoService) {
         this.quizRepository = quizRepository;
         this.palavraRepository = palavraRepository;
         this.quizPalavrasService = quizPalavrasService;
         this.rankingTempoService = rankingTempoService;
         this.rankingPontuacaoService = rankingPontuacaoService;
+        this.sessaoService = sessaoService;
     }
 
     public QuizModel startQuiz(StartQuizRecordDto quizRecordDto){
@@ -44,6 +47,17 @@ public class QuizService {
 
         return quizRepository.save(quiz);
 
+    }
+
+    public Integer countQuizScore(QuizModel quiz, FinishQuizRecordDto finishQuizRecordDto){
+        Integer _pontuacao = 0;
+        for(int i = 0; i < finishQuizRecordDto.respostas().size(); i++){
+
+            if(quizPalavrasService.isRespostaCorrect(finishQuizRecordDto.respostas().get(i))){
+                _pontuacao++;
+            }
+        }
+        return _pontuacao;
     }
 
     public ResponseEntity<Object> finishQuiz (UUID id, FinishQuizRecordDto finishQuizRecordDto){
@@ -58,15 +72,7 @@ public class QuizService {
 
             quiz.setTempoFinal(LocalTime.now());
 
-            Integer _pontuacao = 0;
-            for(int i = 0; i < finishQuizRecordDto.respostas().size(); i++){
-
-                if(quizPalavrasService.isRespostaCorrect(finishQuizRecordDto.respostas().get(i))){
-                    _pontuacao++;
-                }
-            }
-
-            quiz.setPontuacao(_pontuacao);
+            quiz.setPontuacao(countQuizScore(quiz, finishQuizRecordDto));
 
             rankingTempoService.validateUserToAddOrUpdate(quiz);
             rankingPontuacaoService.validateUserToAddOrUpdate(quiz);
