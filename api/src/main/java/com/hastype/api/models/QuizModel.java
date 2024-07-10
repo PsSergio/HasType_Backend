@@ -39,6 +39,8 @@ public class QuizModel {
         return tempoInicio;
     }
 
+//    TODO: trocar localTime para LocalDateTime
+
     public void setTempoInicio(LocalTime tempoInicio) {
         this.tempoInicio = tempoInicio;
     }

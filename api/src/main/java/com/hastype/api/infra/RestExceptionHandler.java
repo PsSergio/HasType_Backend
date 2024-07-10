@@ -1,8 +1,6 @@
 package com.hastype.api.infra;
 
-import com.hastype.api.exceptions.EmailAlreadyExistsException;
-import com.hastype.api.exceptions.LoginFailedException;
-import com.hastype.api.exceptions.UserNotFoundException;
+import com.hastype.api.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,4 +24,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     private ResponseEntity<String> emailAlreadyExistsHandler(EmailAlreadyExistsException e){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
+
+    @ExceptionHandler(SessionDoesntExistException.class)
+    private ResponseEntity<String> sessionDoesntExistsHandler(SessionDoesntExistException e){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    }
+
+    @ExceptionHandler(SessionIsExpiredException.class)
+    private ResponseEntity<String> sessionIsExpiredHandler(SessionIsExpiredException e){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    }
+
 }
