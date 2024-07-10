@@ -5,6 +5,7 @@ import com.hastype.api.dtos.StartQuizRecordDto;
 import com.hastype.api.models.QuizModel;
 import com.hastype.api.repository.PalavraRepository;
 import com.hastype.api.repository.QuizRepository;
+import com.hastype.api.repository.SessaoRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,6 @@ import java.util.UUID;
 public class QuizService {
 
     private final QuizRepository quizRepository;
-    private final PalavraRepository palavraRepository;
 
     private final QuizPalavrasService quizPalavrasService;
 
@@ -29,13 +29,15 @@ public class QuizService {
 
     private final SessaoService sessaoService;
 
-    public QuizService(QuizRepository quizRepository, PalavraRepository palavraRepository, QuizPalavrasService quizPalavrasService, RankingTempoService rankingTempoService, RankingPontuacaoService rankingPontuacaoService, SessaoService sessaoService) {
+    private final SessaoRepository sessaoRepository;
+
+    public QuizService(QuizRepository quizRepository, QuizPalavrasService quizPalavrasService, RankingTempoService rankingTempoService, RankingPontuacaoService rankingPontuacaoService, SessaoService sessaoService, SessaoRepository sessaoRepository) {
         this.quizRepository = quizRepository;
-        this.palavraRepository = palavraRepository;
         this.quizPalavrasService = quizPalavrasService;
         this.rankingTempoService = rankingTempoService;
         this.rankingPontuacaoService = rankingPontuacaoService;
         this.sessaoService = sessaoService;
+        this.sessaoRepository = sessaoRepository;
     }
 
     public QuizModel startQuiz(StartQuizRecordDto quizRecordDto){
@@ -49,7 +51,7 @@ public class QuizService {
 
     }
 
-    public Integer countQuizScore(QuizModel quiz, FinishQuizRecordDto finishQuizRecordDto){
+    public Integer countQuizScore(FinishQuizRecordDto finishQuizRecordDto){
         Integer _pontuacao = 0;
         for(int i = 0; i < finishQuizRecordDto.respostas().size(); i++){
 
@@ -72,14 +74,17 @@ public class QuizService {
 
             quiz.setTempoFinal(LocalTime.now());
 
-            quiz.setPontuacao(countQuizScore(quiz, finishQuizRecordDto));
+            quiz.setPontuacao(countQuizScore(finishQuizRecordDto));
 
             rankingTempoService.validateUserToAddOrUpdate(quiz);
             rankingPontuacaoService.validateUserToAddOrUpdate(quiz);
 
+            sessaoService.updateSession(sessaoRepository.findByUserId(quiz.getUserId()).get());
+
             return new ResponseEntity<>(quizRepository.save(quiz), HttpStatus.OK);
 
         }
+
         return new ResponseEntity<>("Not Found", HttpStatus.NOT_FOUND);
 
     }
