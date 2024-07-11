@@ -3,12 +3,10 @@ package com.hastype.api.services;
 
 import com.hastype.api.dtos.LoginRecordDto;
 import com.hastype.api.dtos.UserRecordDto;
-import com.hastype.api.exceptions.EmailAlreadyExistsException;
-import com.hastype.api.exceptions.LoginFailedException;
-import com.hastype.api.exceptions.UserIsAlreadyLoggedException;
-import com.hastype.api.exceptions.UserNotFoundException;
+import com.hastype.api.exceptions.*;
 import com.hastype.api.models.SessaoModel;
 import com.hastype.api.models.UserModel;
+import com.hastype.api.repository.SessaoRepository;
 import com.hastype.api.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,12 +23,30 @@ public class  UserService {
     private static Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
+
+    private final SessaoRepository sessaoRepository;
+
     private final SessaoService sessaoService;
 
-    public UserService(UserRepository userRepository, SessaoService sessaoService) {
+    public UserService(UserRepository userRepository, SessaoRepository sessaoRepository, SessaoService sessaoService) {
         this.userRepository = userRepository;
+        this.sessaoRepository = sessaoRepository;
         this.sessaoService = sessaoService;
     }
+
+    public ResponseEntity<Boolean> singoutUser(UUID userId){
+        var sessaoModel = sessaoRepository.findByUserId(userId).orElseThrow(SessionDoesntExistException::new);
+
+        try{
+            sessaoRepository.deleteById(sessaoModel.getId());
+            return ResponseEntity.status(HttpStatus.OK).body(Boolean.TRUE);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(Boolean.FALSE);
+
+        }
+
+    }
+
 
     public ResponseEntity<SessaoModel> validaLogin(LoginRecordDto loginRecordDto){
 

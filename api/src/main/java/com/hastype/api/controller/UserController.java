@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("user/")
@@ -28,17 +29,24 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("add")
+    @PostMapping("singup")
     public ResponseEntity<UserModel> cadastraUsuario(@RequestBody @Valid UserRecordDto userRecordDto){
 
         return userService.addUser(userRecordDto);
 
     }
 
-    @PostMapping("validaLogin")
+    @PostMapping("singin")
     public ResponseEntity<SessaoModel> validaLogin (@RequestBody @Valid LoginRecordDto loginRecordDto){
 
         return userService.validaLogin(loginRecordDto);
+
+    }
+
+    @DeleteMapping("singout/{userId}")
+    public ResponseEntity<Boolean> singout (@PathVariable(value="userId") UUID userId){
+
+        return userService.singoutUser(userId);
 
     }
 
