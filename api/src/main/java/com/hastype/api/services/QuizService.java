@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +45,7 @@ public class QuizService {
 
         var quiz = new QuizModel();
         BeanUtils.copyProperties(quizRecordDto, quiz);
-        quiz.setTempoInicio(LocalTime.now());
+        quiz.setTempoInicio(LocalDateTime.now());
         quiz.setPontuacao(0);
 
         return quizRepository.save(quiz);
@@ -72,7 +73,7 @@ public class QuizService {
 
             BeanUtils.copyProperties(finishQuizRecordDto, quiz);
 
-            quiz.setTempoFinal(LocalTime.now());
+            quiz.setTempoFinal(LocalDateTime.now());
 
             quiz.setPontuacao(countQuizScore(finishQuizRecordDto));
 

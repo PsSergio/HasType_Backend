@@ -5,6 +5,7 @@ import com.hastype.api.dtos.LoginRecordDto;
 import com.hastype.api.dtos.UserRecordDto;
 import com.hastype.api.exceptions.EmailAlreadyExistsException;
 import com.hastype.api.exceptions.LoginFailedException;
+import com.hastype.api.exceptions.UserIsAlreadyLoggedException;
 import com.hastype.api.exceptions.UserNotFoundException;
 import com.hastype.api.models.SessaoModel;
 import com.hastype.api.models.UserModel;
@@ -32,22 +33,29 @@ public class  UserService {
     }
 
     public ResponseEntity<SessaoModel> validaLogin(LoginRecordDto loginRecordDto){
+
         var user = new UserModel();
+
+        UserModel userValidated = userRepository.findByEmailAndSenha(loginRecordDto.email(), loginRecordDto.senha()).orElseThrow(LoginFailedException::new);
+
         BeanUtils.copyProperties(loginRecordDto, user);
 
-        boolean isLoginValid = user.validateUserLogin(loginRecordDto.email(), loginRecordDto.senha());
-        System.out.println(isLoginValid);
+        boolean isLoginValid = user.validateUserLogin(userValidated.getEmail(), userValidated.getSenha());
+
+//        check email and password to login
         if(isLoginValid){
 
-            UserModel userValidated = userRepository.findByEmailAndSenha(loginRecordDto.email(), loginRecordDto.senha()).orElseThrow(LoginFailedException::new);
+
+//          check if user already has activity session
+            if(sessaoService.isUserAlreadyLoggedInSession(userValidated.getId())){
+                throw new UserIsAlreadyLoggedException();
+            }
+
             return ResponseEntity.status(HttpStatus.FOUND).body(sessaoService.saveSession(userValidated.getId()));
 
         }
 
-//        TODO: needs to fix login validation
-
         throw new LoginFailedException();
-
 
     }
 

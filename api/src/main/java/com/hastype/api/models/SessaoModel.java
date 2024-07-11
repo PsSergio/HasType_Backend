@@ -72,7 +72,7 @@ public class SessaoModel {
         this.finalSession = LocalDateTime.now().plusSeconds(timeInSeconds);
     }
 
-    public boolean validateSessionExpiration(){
+    public boolean isSessionNotExpired(){
         return LocalDateTime.now().isBefore(this.finalSession);
     }
 }

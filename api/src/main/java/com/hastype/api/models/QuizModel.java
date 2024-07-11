@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.UUID;
 
@@ -13,9 +14,9 @@ public class QuizModel {
 
     private Integer pontuacao;
 
-    private LocalTime tempoInicio;
+    private LocalDateTime tempoInicio;
 
-    private LocalTime tempoFinal;
+    private LocalDateTime tempoFinal;
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -35,21 +36,19 @@ public class QuizModel {
         this.pontuacao = pontuacao;
     }
 
-    public LocalTime getTempoInicio() {
+    public LocalDateTime getTempoInicio() {
         return tempoInicio;
     }
 
-//    TODO: trocar localTime para LocalDateTime
-
-    public void setTempoInicio(LocalTime tempoInicio) {
+    public void setTempoInicio(LocalDateTime tempoInicio) {
         this.tempoInicio = tempoInicio;
     }
 
-    public LocalTime getTempoFinal() {
+    public LocalDateTime getTempoFinal() {
         return tempoFinal;
     }
 
-    public void setTempoFinal(LocalTime tempoFinal) {
+    public void setTempoFinal(LocalDateTime tempoFinal) {
         this.tempoFinal = tempoFinal;
     }
 

@@ -2,12 +2,14 @@ package com.hastype.api.services;
 
 import com.hastype.api.exceptions.SessionDoesntExistException;
 import com.hastype.api.exceptions.SessionIsExpiredException;
+import com.hastype.api.exceptions.UserIsAlreadyLoggedException;
 import com.hastype.api.models.SessaoModel;
 import com.hastype.api.repository.SessaoRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -45,6 +47,24 @@ public class SessaoService {
         return sessaoRepository.findById(sessionId).orElseThrow(SessionDoesntExistException::new);
     }
 
+    public boolean isUserAlreadyLoggedInSession (UUID userId){
+        Optional<SessaoModel> sessaoRequest = sessaoRepository.findByUserId(userId);
+
+        if(sessaoRequest.isPresent()){
+            var sessaoModel = new SessaoModel();
+            BeanUtils.copyProperties(sessaoRequest.get(), sessaoModel);
+
+            if(sessaoModel.isSessionNotExpired()){
+                return true;
+            }
+
+            sessaoRepository.deleteById(sessaoRequest.get().getId());
+        }
+
+        return false;
+
+    }
+
     public void validateSession(UUID sessionId){
         var session = sessaoRepository.findById(sessionId);
         if(session.isPresent()){
@@ -52,7 +72,7 @@ public class SessaoService {
             var sessaoModel = new SessaoModel();
             BeanUtils.copyProperties(session.get(), sessaoModel);
 
-            boolean sessionIsValid = sessaoModel.validateSessionExpiration();
+            boolean sessionIsValid = sessaoModel.isSessionNotExpired();
 
             if(sessionIsValid){
                 updateSession(sessaoModel);
