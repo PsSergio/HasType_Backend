@@ -1,5 +1,7 @@
 package com.hastype.api.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -21,8 +23,13 @@ public class SessaoModel {
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID userId;
 
-    private LocalDateTime initialSession;
 
+
+    @JsonFormat
+            (shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+    private LocalDateTime initialSession;
+    @JsonFormat
+            (shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime finalSession;
 
     private int sessionExpiration;
@@ -35,28 +42,28 @@ public class SessaoModel {
         this.userId = userId;
     }
 
-    public LocalDateTime getInitialSession() {
-        return initialSession;
-    }
-
     public void setInitialSession(LocalDateTime initialSession) {
         this.initialSession = initialSession;
-    }
-
-    public LocalDateTime getFinalSession() {
-        return finalSession;
     }
 
     public void setFinalSession(LocalDateTime finalSession) {
         this.finalSession = finalSession;
     }
 
-    public int getSessionExpiration() {
-        return sessionExpiration;
-    }
-
     public void setSessionExpiration(int sessionExpiration) {
         this.sessionExpiration = sessionExpiration;
+    }
+
+    public LocalDateTime getInitialSession() {
+        return initialSession;
+    }
+
+    public LocalDateTime getFinalSession() {
+        return finalSession;
+    }
+
+    public int getSessionExpiration() {
+        return sessionExpiration;
     }
 
     public UUID getId() {
@@ -72,6 +79,7 @@ public class SessaoModel {
         this.finalSession = LocalDateTime.now().plusSeconds(timeInSeconds);
     }
 
+    @JsonIgnore
     public boolean isSessionNotExpired(){
         return LocalDateTime.now().isBefore(this.finalSession);
     }

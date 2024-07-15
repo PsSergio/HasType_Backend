@@ -48,11 +48,13 @@ public class  UserService {
     }
 
 
-    public ResponseEntity<SessaoModel> validaLogin(LoginRecordDto loginRecordDto){
+    public ResponseEntity<SessaoModel> loginValidation(LoginRecordDto loginRecordDto){
 
         var user = new UserModel();
 
-        UserModel userValidated = userRepository.findByEmailAndSenha(loginRecordDto.email(), loginRecordDto.senha()).orElseThrow(LoginFailedException::new);
+        UserModel userValidated = userRepository
+                .findByEmailAndSenha(loginRecordDto.email(), loginRecordDto.senha())
+                .orElseThrow(LoginFailedException::new);
 
         BeanUtils.copyProperties(loginRecordDto, user);
 
@@ -61,13 +63,12 @@ public class  UserService {
 //        check email and password to login
         if(isLoginValid){
 
-
 //          check if user already has activity session
             if(sessaoService.isUserAlreadyLoggedInSession(userValidated.getId())){
                 throw new UserIsAlreadyLoggedException();
             }
-
-            return ResponseEntity.status(HttpStatus.FOUND).body(sessaoService.saveSession(userValidated.getId()));
+            logger.info("Criando Sessão do Usuário!!");
+            return ResponseEntity.status(HttpStatus.OK).body(sessaoService.saveSession(userValidated.getId()));
 
         }
 
@@ -75,7 +76,7 @@ public class  UserService {
 
     }
 
-    public ResponseEntity<UserModel> addUser(UserRecordDto userRecordDto){
+    public ResponseEntity<SessaoModel> addUser(UserRecordDto userRecordDto){
 
             if(userRepository.findByEmail(userRecordDto.email()).isPresent()){
                 logger.info("Usuário {} já existe no sistema!!!", userRecordDto.email());
@@ -84,7 +85,8 @@ public class  UserService {
 
             var user = new UserModel();
             BeanUtils.copyProperties(userRecordDto, user);
-            return ResponseEntity.status(HttpStatus.CREATED).body(userRepository.save(user));
+            userRepository.save(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(sessaoService.saveSession(user.getId()));
     }
 
     public ResponseEntity<List<UserModel>> findAllUsers(){

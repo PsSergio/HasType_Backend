@@ -13,18 +13,18 @@ import java.util.UUID;
 public class UserModel {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "VARCHAR(36)")
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID id;
 
-//    @Column(name = "email")
+    //    @Column(name = "email")
     private String email;
 
-//    @Column(name = "nome")
+    //    @Column(name = "nome")
     private String nome;
 
-//    @Column(name = "senha")
+    //    @Column(name = "senha")
     private String senha;
 
     public UUID getId() {
@@ -59,7 +59,7 @@ public class UserModel {
         this.senha = senha;
     }
 
-    public boolean validateUserLogin(String _email, String _senha){
+    public boolean validateUserLogin(String _email, String _senha) {
         System.out.println(email + " - " + _email);
         System.out.println(senha + " - " + _senha);
         return Objects.equals(this.email, _email) && Objects.equals(this.senha, _senha);

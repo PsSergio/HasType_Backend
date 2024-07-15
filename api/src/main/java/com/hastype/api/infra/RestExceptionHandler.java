@@ -37,7 +37,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UserIsAlreadyLoggedException.class)
     private ResponseEntity<String> userIsAlreadyLoggedHandler(UserIsAlreadyLoggedException e){
-        return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 
 }

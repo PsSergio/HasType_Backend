@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @PostMapping("singup")
-    public ResponseEntity<UserModel> cadastraUsuario(@RequestBody @Valid UserRecordDto userRecordDto){
+    public ResponseEntity<SessaoModel> cadastraUsuario(@RequestBody @Valid UserRecordDto userRecordDto){
 
         return userService.addUser(userRecordDto);
 
@@ -39,11 +39,11 @@ public class UserController {
     @PostMapping("singin")
     public ResponseEntity<SessaoModel> validaLogin (@RequestBody @Valid LoginRecordDto loginRecordDto){
 
-        return userService.validaLogin(loginRecordDto);
+        return userService.loginValidation(loginRecordDto);
 
     }
 
-    @DeleteMapping("singout/{userId}")
+    @DeleteMapping("logout/{userId}")
     public ResponseEntity<Boolean> singout (@PathVariable(value="userId") UUID userId){
 
         return userService.singoutUser(userId);
