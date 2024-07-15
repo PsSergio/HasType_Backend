@@ -2,6 +2,7 @@ package com.hastype.api.controller;
 
 import com.hastype.api.dtos.FinishQuizRecordDto;
 import com.hastype.api.dtos.StartQuizRecordDto;
+import com.hastype.api.dtos.StartQuizResponseDto;
 import com.hastype.api.models.PalavraModel;
 import com.hastype.api.models.QuizModel;
 import com.hastype.api.services.QuizPalavrasService;
@@ -40,7 +41,7 @@ public class QuizController {
 
 
     @PostMapping("start/{sessionId}")
-    public ResponseEntity<List<Object>> iniciarQuiz(@PathVariable(value="sessionId") UUID sessionId){
+    public ResponseEntity<StartQuizResponseDto> iniciarQuiz(@PathVariable(value="sessionId") UUID sessionId){
 
         sessaoService.validateSession(sessionId);
 
@@ -49,7 +50,7 @@ public class QuizController {
         QuizModel quiz = quizService.startQuiz(startQuizRecordDto);
         List<PalavraModel> palavrasModel = quizPalavrasService.atribuirPalavraAoQuiz(startQuizRecordDto.qtdPalavras(), quiz.getId());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(Arrays.asList(quiz, palavrasModel));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new StartQuizResponseDto(quiz, palavrasModel));
 
     }
 
