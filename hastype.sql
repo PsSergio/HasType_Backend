@@ -4,19 +4,22 @@ USE hastype;
 
 create table User(
 	id varchar(36) PRIMARY KEY,
-    email varchar(30) NOT NULL UNIQUE,
-    nome varchar(30) NOT NULL,
-    senha varchar(10) NOT NULL
+    email varchar(40) NOT NULL UNIQUE,
+    nome varchar(40) NOT NULL,
+    senha varchar(36) NOT NULL
 );
 
 create table Quiz(
 	id varchar(36) PRIMARY KEY NOT NULL,
     pontuacao Integer (2) NOT NULL,
-    tempo_inicio Time,
-    tempo_final Time, 
+    tempo_inicio DateTime,
+    tempo_final DateTime, 
     user_id varchar(36) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES User(id)
 );
+
+select * from palavra;
+select * from sessao;
 
 create table quiz_palavra(
 	quiz_id varchar(36) NOT NULL,
@@ -30,6 +33,22 @@ create table palavra (
 	palavra_normal varchar(30) NOT NULL,
     palavra_traduzida varchar(30) NOT NULL
 );
+
+create table sessao(
+	id varchar(36) NOT NULL PRIMARY KEY,
+	user_id varchar(36) NOT NULL,
+    initial_session DateTime NOT NULL,
+    final_session DateTime NOT NULL,
+    session_expiration int(10) NOT NULL,
+    foreign key (user_id) REFERENCES User(id)
+
+);
+
+select * from palavra;
+
+select * from quiz
+
+select * from sessao;
 
 create table ranking_tempo(
 	id varchar(36) NOT NULL PRIMARY KEY,

@@ -62,7 +62,7 @@ public class QuizController {
 //
 //        rankingTempoService.atualizaRanking();
 
-        return new ResponseEntity<Object>(quizService.finishQuiz(id, finishQuizRecordDto), HttpStatus.OK);
+        return quizService.finishQuiz(id, finishQuizRecordDto);
 
 
     }

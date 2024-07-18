@@ -82,7 +82,9 @@ public class QuizService {
 
             sessaoService.updateSession(sessaoRepository.findByUserId(quiz.getUserId()).get());
 
-            return new ResponseEntity<>(quizRepository.save(quiz), HttpStatus.OK);
+            quizRepository.save(quiz);
+
+            return ResponseEntity.status(HttpStatus.OK).body(quiz);
 
         }
 
